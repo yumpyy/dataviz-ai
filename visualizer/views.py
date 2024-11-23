@@ -11,10 +11,6 @@ def create(request):
     """
     handle create landing page routing
     """
-    # generator = InfographicGenerator()
-    #
-    #
-    #     # generator.generate_infographic(data)
     return render(request, 'create.html', {})
 
 def create_prompt(request):
@@ -23,9 +19,13 @@ def create_prompt(request):
     """
     if request.POST:
         prompt = request.POST['prompt']
-        print('====')
         print(prompt)
-        print('====')
+
+        generator = InfographicGenerator()
+        vid_path = generator.generate_infographic(prompt)
+        print(vid_path)
+
+        return render(request, 'create_upload.html', {'vid_path': vid_path})
 
     return render(request, 'create_prompt.html', )
 
@@ -38,10 +38,12 @@ def create_upload(request):
 
         if file:
             file_contents = file.read()
-            print('====')
-            print(file_contents)
-            print('====')
 
+            generator = InfographicGenerator()
+            vid_path = generator.generate_infographic(file_contents)
+            print(vid_path)
+
+            return render(request, 'create_upload.html', {'vid_path': vid_path})
         else:
             print("empty file")
 

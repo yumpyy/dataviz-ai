@@ -15,4 +15,13 @@
         <button type="submit">Generate Graphics</button>
     </div>
 </form>
+
+{% if vid_path %}
+    <div>
+        <video>
+            <source src={{ vid_path }} type="video/mp4">
+        </video> 
+    </div>
+{% endif %}
+
 {% endblock %}

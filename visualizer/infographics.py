@@ -1,20 +1,22 @@
 import os
 import subprocess
+from typing import Dict, Any
 
-from langchain_ollama.llms import OllamaLLM
-from typing import Dict, Any, List
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+load_dotenv()
 
 class InfographicGenerator:
     def __init__(self,
-                 code_model='codegemma:2b-code',):
+                 code_model='gemini-1.5-flash-8b',):
         """
         Initialize the infographic generator with open-source AI models
         """
 
         self.model = code_model
         # Code Generation Model
-        # self.download_models()
-        self.llm = OllamaLLM(model=self.model)
+        self.llm = ChatGoogleGenerativeAI(model=self.model)
 
         # Output directory
         self.output_dir = 'infographic_outputs'
@@ -25,7 +27,7 @@ class InfographicGenerator:
         Preprocess and analyze input data
         """
         # First, clean and normalize the input
-        cleaned_data = input_data.strip()
+        cleaned_data = input_data
 
         # Use NLP to understand data context
         context_analysis = self.llm.invoke(f"""
@@ -37,11 +39,11 @@ class InfographicGenerator:
         Data: {cleaned_data}
         """)
 
-        print(context_analysis)
+        print(context_analysis.content)
 
         return {
             'raw_data': cleaned_data,
-            'context': context_analysis
+            'context': context_analysis.content
         }
 
     def recommend_visualization(self, data_analysis: Dict[str, Any]) -> str:
@@ -62,7 +64,8 @@ class InfographicGenerator:
         Respond with ONLY the visualization type.
         """)
 
-        return viz_recommendation.strip()
+        print(viz_recommendation.content)
+        return viz_recommendation.content
 
     def generate_manim_code(self,
                              data_analysis: Dict[str, Any],
@@ -71,18 +74,19 @@ class InfographicGenerator:
         Generate Manim animation code dynamically
         """
         manim_code_prompt = f"""
-        Generate Manim Python code for a {viz_type} visualization with these requirements:
+        Generate Matplotlib Python code for a {viz_type} visualization with these requirements:
         - Data: {data_analysis['raw_data']}
         - Create an animated, professional visualization
         - Use a clean, modern color palette
         - Include smooth transitions
         - Add clear labels and title
 
-        Provide ONLY the complete Manim scene class code.
+        Provide ONLY the complete Matplotlib scene class code. DO NOT USE MARKDOWN syntax. DO NOT USE THREE BACKTICKS
         """
 
         manim_code = self.llm.invoke(manim_code_prompt)
-        return manim_code
+        print(manim_code.content)
+        return manim_code.content
 
     def render_visualization(self, manim_code: str, output_filename: str):
         """
@@ -95,7 +99,7 @@ class InfographicGenerator:
 
             # Render the scene
             try:
-                subprocess.run(['manim', '-ql', 'temp_manim_scene.py'], stdout=subprocess.DEVNULL, check=True)
+                subprocess.run(['python',  'temp_manim_scene.py'], stdout=subprocess.DEVNULL, check=True)
             except subprocess.CalledProcessError as e:
                 print(e.cmd)
                 print(f"Command failed with exit code: {e.returncode}")
@@ -111,20 +115,20 @@ class InfographicGenerator:
         except Exception as e:
             print(f"Error rendering visualization: {e}")
 
-    def generate_infographic(self, prompt: str, file: None):
+    def generate_infographic(self, prompt: str):
         """
         Main pipeline for generating infographic video
         """
-        # Step 1: Preprocess and analyze data
+        # preprocess and analyze data
         data_analysis = self.preprocess_data(prompt)
 
-        # Step 2: Recommend visualization type
+        # recommend visualization type
         viz_type = self.recommend_visualization(data_analysis)
 
-        # Step 3: Generate Manim animation code
+        # generate Manim animation code
         manim_code = self.generate_manim_code(data_analysis, viz_type)
 
-        # Step 4: Render visualization
+        # render visualization
         output_filename = f'infographic_{len(os.listdir(self.output_dir)) + 1}.mp4'
         self.render_visualization(manim_code, output_filename)
 
