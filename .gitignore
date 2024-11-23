@@ -1,0 +1,8 @@
+todo
+tests/
+test*
+infographic_outputs/
+
+.venv/
+test*
+__pycache__
