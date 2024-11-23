@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href={% url 'visualizer:index' %}><div>Back</div></a>
+
+<h1>Create with AI</h1>
+<h3>How would you like to get started?</h3>
+
+<div class="plain-prompt card">
+    <a href={% url 'visualizer:create_prompt' %}>
+        <div class="card-text">
+            Bring your own prompt
+        </div>
+    </a>
+</div>
+
+<div class="file-or-url card">
+    <a href={% url 'visualizer:create_upload' %}>
+        <div class="card-text">
+            Upload file
+        </div>
+    </a>
+</div>
+
+
+<div class="recent-prompts">
+    <!--add recent prompts from sqlite db-->
+</div>
+{% endblock %}

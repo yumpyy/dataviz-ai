@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href={% url 'visualizer:index' %}><div>Back</div></a>
+
+<h1>Write your prompt here</h1>
+<h3>Describe the data you'd like to use</h3>
+
+<form action={% url 'visualizer:create_prompt' %} method="post">
+    {% csrf_token %}
+    <div>
+        <label for="prompt">Prompt</label>
+        <textarea required id="prompt" name="prompt" rows="25" cols="80"></textarea>
+    </div>
+    <div>
+        <button type="submit">Generate Graphics</button>
+    </div>
+</form>
+{% endblock %}

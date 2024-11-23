@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href={% url 'visualizer:index' %}><div>Back</div></a>
+
+<form action={% url 'visualizer:create_upload' %} method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label for="file">Upload File</label>
+        <input required id="file" type="file" name="file">
+    </div>
+    <div>
+        <button type="submit">Generate Graphics</button>
+    </div>
+</form>
+
+{% endblock %}
