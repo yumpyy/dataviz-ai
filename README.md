@@ -13,6 +13,12 @@ Dependencies
 Setup & Run
 -----------
 
+1. Create `.env` file with your Gemini API key
+```
+GOOGLE_API_KEY=your-api-key-here
+```
+
+2. Run the following command
 ```
 python -m venv .venv
 source .venv/bin/activate
