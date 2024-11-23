@@ -4,5 +4,6 @@ test*
 infographic_outputs/
 
 .venv/
+.env
 test*
 __pycache__
