@@ -2,16 +2,51 @@
 {% load static %}
 
 {% block content %}
-<a href={% url 'visualizer:index' %}><div>Back to Menu</div></a>
 
-<h1>Here is your result!</h1>
+<div
+  class="hero min-h-screen"
+  style="background-image: url(https://64.media.tumblr.com/a32eef3c6cc2389c254a22ef06b3259b/b81f0327a444c7a5-52/s540x810/987ebaf3eb9b33ded1e440615ec7b56c4dbddad5.gifv);">
 
-{% if vid_path %}
+  <div class="hero-overlay bg-opacity-60"></div>
+
+  <!-- Back Button -->
+  <a href="{% url 'visualizer:index' %}" 
+  class="btn btn-outline btn-sm text-white border-white absolute top-8 left-8 z-50">Back</a>
+
+  <div class="hero-content text-neutral-content text-center flex flex-col items-center relative w-full">
+
+    
+
+    <!-- Messages Section -->
+    {% if messages %}
+      <div class="w-full max-w-lg mx-auto mb-6">
+        {% for message in messages %}
+          <div class="alert alert-info bg-blue-200 text-blue-800 rounded-md p-4" role="alert">
+            <span class="font-medium">{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Title -->
     <div>
-        <video control>
-            <source src={% static vid_path %} type="video/mp4">
-        </video> 
+      <h1 class="text-5xl font-bold mb-8">Here is your result!</h1>
     </div>
-{% endif %}
+
+    <!-- Video Display -->
+    {% if vid_path %}
+      <div class="w-full max-w-lg mx-auto">
+        <video controls class="w-full rounded-md shadow-lg">
+          <source src="{% static vid_path %}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    {% else %}
+      <div class="text-lg text-gray-300 mt-6">
+        No video available to display.
+      </div>
+    {% endif %}
+  </div>
+</div>
 
 {% endblock %}

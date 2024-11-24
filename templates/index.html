@@ -1,4 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-<a href={% url 'visualizer:create' %}><h1>Build infographics pain-free</h1></a>
+<!-- Title Section -->
+
+<div
+  class="hero min-h-screen"
+  style="background-image: url(https://64.media.tumblr.com/a32eef3c6cc2389c254a22ef06b3259b/b81f0327a444c7a5-52/s540x810/987ebaf3eb9b33ded1e440615ec7b56c4dbddad5.gifv);">
+  <div class="hero-overlay bg-opacity-60"></div>
+  <div class="hero-content text-neutral-content text-center">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-7xl font-bold">Hello there</h1>
+      <p class="mb-5">
+        Ready to build infographics pain free?
+      </p>
+      <a href="{% url 'visualizer:create' %}">
+        <button class="btn btn-primary" >Get Started</button>
+      </a>
+      
+    </div>
+  </div>
+</div>
+
 {% endblock %}

@@ -1,28 +1,77 @@
 {% extends 'base.html' %}
 {% block content %}
-<a href={% url 'visualizer:index' %}><div>Back</div></a>
 
-<h1>Create with AI</h1>
-<h3>How would you like to get started?</h3>
+<div
+  class="hero min-h-screen"
+  style="background-image: url(https://64.media.tumblr.com/a32eef3c6cc2389c254a22ef06b3259b/b81f0327a444c7a5-52/s540x810/987ebaf3eb9b33ded1e440615ec7b56c4dbddad5.gifv);">
 
-<div class="plain-prompt card">
-    <a href={% url 'visualizer:create_prompt' %}>
-        <div class="card-text">
-            Bring your own prompt
+  <div class="hero-overlay bg-opacity-60"></div>
+
+  <!-- Back Button -->
+  <a href="{% url 'visualizer:index' %}" 
+  class="btn btn-outline btn-sm text-white border-white absolute top-8 left-8 z-50">
+ Back
+</a>
+
+
+  <div class="hero-content text-neutral-content text-center flex flex-col items-center relative w-full">
+    
+
+    <!-- Title -->
+    <div class="mt-12">
+      <h1 class="text-6xl font-bold mb-4">Create with AI</h1>
+      <h3 class="text-lg text-gray-300 mb-8">How would you like to get started?</h3>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+      <!-- Card 1 -->
+      <a href="{% url 'visualizer:create_prompt' %}" 
+         class="card card-compact bg-base-100 w-96 shadow-xl transform transition duration-200 hover:scale-110">
+        <figure>
+          <img
+            src="https://cdn.discordapp.com/attachments/1294895647237079050/1310115242226880522/output-onlinepngtools.png?ex=67440b66&is=6742b9e6&hm=943d7283809efaf33438385be1d36488ffabce04fbb1e7e9305eb3a471ceab34&"
+            alt="Shoes" />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">Bring your own prompt</h2>
+          <p class="text-left">Write your own prompt to create cool visuals and graphics</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary">Go</button>
+          </div>
         </div>
-    </a>
-</div>
+      </a>
 
-<div class="file-or-url card">
-    <a href={% url 'visualizer:create_upload' %}>
-        <div class="card-text">
-            Upload file
+      <!-- Card 2 -->
+      <a href="{% url 'visualizer:create_upload' %}" 
+         class="card card-compact bg-base-100 w-96 shadow-xl transform transition duration-200 hover:scale-110">
+        <figure>
+          <img
+            src="https://cdn.discordapp.com/attachments/1294895647237079050/1310116046128283648/output-onlinepngtools1.png?ex=67440c26&is=6742baa6&hm=c4058c61dde6e5c35eae6bb3797a8480e5c3cbf85ebc815bb23a12f0fe662086&"
+            alt="Shoes" />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">Upload File</h2>
+          <p class="text-left">Upload CSV, JSON, Structured data file for generating Infographics</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary">Go</button>
+          </div>
         </div>
-    </a>
-</div>
+      </a>
+    </div>
 
 
-<div class="recent-prompts">
-    <!--add recent prompts from sqlite db-->
+    <div class="mt-10"></div>
+
+    <div class="w-full max-w-2xl">
+      <a href="#"></a>
+      <div class="card bg-gray-800 shadow-xl hover:scale-105 transform transition duration-200">
+        <div class="card-body text-center">
+          <div class="text-purple-400 font-semibold text-lg">Recent Prompts</div>
+          <p class="text-gray-300 text-sm">Browse your recent activity and continue where you left off</p>
+      </div>
+    </div>
+  </div>
 </div>
+
 {% endblock %}
