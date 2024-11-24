@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <a href={% url 'visualizer:index' %}><div>Back</div></a>
+{% if messages %}
+     {% for message in messages %}
+         <div class="" role="alert">
+             <span class="">{{ message }}</span>
+         </div>
+     {% endfor %}
+{% endif %}
+
+<h1>Upload your files here</h1>
+<h3>The files may be CSV, JSON, etc.</h3>
 
 <form action={% url 'visualizer:create_upload' %} method="post" enctype="multipart/form-data">
     {% csrf_token %}

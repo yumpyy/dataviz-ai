@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<a href={% url 'visualizer:index' %}><div>Back to Menu</div></a>
+
+<h1>Here is your result!</h1>
+
+{% if vid_path %}
+    <div>
+        <video control>
+            <source src={% static vid_path %} type="video/mp4">
+        </video> 
+    </div>
+{% endif %}
+
+{% endblock %}

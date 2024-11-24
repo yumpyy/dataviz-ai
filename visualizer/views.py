@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.contrib import messages
+
 from visualizer.infographics import InfographicGenerator
 
 def index(request):
@@ -23,9 +25,13 @@ def create_prompt(request):
 
         generator = InfographicGenerator()
         vid_path = generator.generate_infographic(prompt)
+        if vid_path is None:
+            messages.error(request, 'Something went wrong, Try again Later')
+            return render(request, 'create_prompt.html')
+
         print(vid_path)
 
-        return render(request, 'create_upload.html', {'vid_path': vid_path})
+        return render(request, 'result.html', {'vid_path': vid_path})
 
     return render(request, 'create_prompt.html', )
 
@@ -41,9 +47,15 @@ def create_upload(request):
 
             generator = InfographicGenerator()
             vid_path = generator.generate_infographic(file_contents)
+
+            if vid_path is None:
+                # if vid_path is None, notfiy is user something went wrong
+                messages.error(request, 'Something went wrong, Try again Later')
+                return render(request, 'create_upload.html')
+
             print(vid_path)
 
-            return render(request, 'create_upload.html', {'vid_path': vid_path})
+            return render(request, 'result.html', {'vid_path': vid_path})
         else:
             print("empty file")
 

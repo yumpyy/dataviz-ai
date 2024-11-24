@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <a href={% url 'visualizer:index' %}><div>Back</div></a>
+{% if messages %}
+     {% for message in messages %}
+         <div class="" role="alert">
+             <span class="">{{ message }}</span>
+         </div>
+     {% endfor %}
+{% endif %}
 
 <h1>Write your prompt here</h1>
 <h3>Describe the data you'd like to use</h3>
@@ -15,13 +23,5 @@
         <button type="submit">Generate Graphics</button>
     </div>
 </form>
-
-{% if vid_path %}
-    <div>
-        <video>
-            <source src={{ vid_path }} type="video/mp4">
-        </video> 
-    </div>
-{% endif %}
 
 {% endblock %}

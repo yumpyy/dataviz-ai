@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 from typing import Dict, Any
 
@@ -9,40 +10,36 @@ load_dotenv()
 
 class InfographicGenerator:
     def __init__(self,
-                 code_model='gemini-1.5-flash-8b',):
+                 model='gemini-1.5-flash',):
         """
-        Initialize the infographic generator with open-source AI models
+        initialize the infographic generator with open-source ai models
         """
 
-        self.model = code_model
-        # Code Generation Model
+        self.model = model
+        # code generation model
         self.llm = ChatGoogleGenerativeAI(model=self.model)
 
-        # Output directory
-        self.output_dir = 'infographic_outputs'
+        # output directory
+        self.output_dir = 'static/videos/'
         os.makedirs(self.output_dir, exist_ok=True)
 
     def preprocess_data(self, input_data: str) -> Dict[str, Any]:
         """
-        Preprocess and analyze input data
+        preprocess and analyze input data
         """
-        # First, clean and normalize the input
-        cleaned_data = input_data
 
-        # Use NLP to understand data context
+        # use llm to understand data context
         context_analysis = self.llm.invoke(f"""
         Analyze the following data and provide:
         1. Data type (percentages, comparisons, time series, etc.)
         2. Key statistical insights
         3. Suggested visualization type
 
-        Data: {cleaned_data}
+        Data: {input_data}
         """)
 
-        print(context_analysis.content)
-
         return {
-            'raw_data': cleaned_data,
+            'raw_data': input_data,
             'context': context_analysis.content
         }
 
@@ -64,60 +61,74 @@ class InfographicGenerator:
         Respond with ONLY the visualization type.
         """)
 
-        print(viz_recommendation.content)
         return viz_recommendation.content
 
     def generate_manim_code(self,
                              data_analysis: Dict[str, Any],
                              viz_type: str) -> str:
         """
-        Generate Manim animation code dynamically
+        generate manim animation code dynamically
         """
         manim_code_prompt = f"""
-        Generate Matplotlib Python code for a {viz_type} visualization with these requirements:
-        - Data: {data_analysis['raw_data']}
+        You are an extremely skilled, highly paid professional developer/animator
+
+        Generate Manim Python code for a {viz_type} visualization with these requirements:
+        - Data Summary: {data_analysis['context']}
         - Create an animated, professional visualization
         - Use a clean, modern color palette
         - Include smooth transitions
         - Add clear labels and title
+        - Make sure to have all library import statements
+        - Code should be error-free
 
-        Provide ONLY the complete Matplotlib scene class code. DO NOT USE MARKDOWN syntax. DO NOT USE THREE BACKTICKS
+        Avoid using these symbols: $, ```
+
+        We will be directly executing your code. It should be executable without having to change anything to code. So make sure the code is complete. Do not expect any human intervention
+        Provide ONLY the complete Manim scene code. DO NOT USE MARKDOWN CODE BLOCK OR ANYTHING ELSE
         """
 
         manim_code = self.llm.invoke(manim_code_prompt)
-        print(manim_code.content)
-        return manim_code.content
+
+        clean_code = re.sub(r'```python|```', '', manim_code.content)
+
+        return clean_code
 
     def render_visualization(self, manim_code: str, output_filename: str):
         """
-        Render the Manim visualization to video
+        render the manim visualization to video
         """
         try:
-            # Dynamically create a Python file with the Manim scene
+            # dynamically create a python file with the manim scene
             with open('temp_manim_scene.py', 'w') as f:
                 f.write(manim_code)
 
-            # Render the scene
+            # render the scene
             try:
-                subprocess.run(['python',  'temp_manim_scene.py'], stdout=subprocess.DEVNULL, check=True)
+                subprocess.run(['manim', '-o', 'temp', 'temp_manim_scene.py'], stdout=subprocess.DEVNULL, check=True)
             except subprocess.CalledProcessError as e:
                 print(e.cmd)
                 print(f"Command failed with exit code: {e.returncode}")
                 print(f"Error: {e.stderr}")
 
-            # Move output to designated folder
+                return False
+
+            # move output to designated folder
             os.rename(
-                f'media/videos/temp_manim_scene/1080p60/Scene.mp4',
+                f'media/videos/temp_manim_scene/1080p60/temp.mp4',
                 os.path.join(self.output_dir, output_filename)
             )
 
             print(f"Visualization rendered: {output_filename}")
+
+            return True
+
         except Exception as e:
             print(f"Error rendering visualization: {e}")
+            return False
 
     def generate_infographic(self, prompt: str):
         """
-        Main pipeline for generating infographic video
+        generate infographic video
         """
         # preprocess and analyze data
         data_analysis = self.preprocess_data(prompt)
@@ -129,7 +140,9 @@ class InfographicGenerator:
         manim_code = self.generate_manim_code(data_analysis, viz_type)
 
         # render visualization
-        output_filename = f'infographic_{len(os.listdir(self.output_dir)) + 1}.mp4'
-        self.render_visualization(manim_code, output_filename)
+        output_filename = f'{len(os.listdir(self.output_dir)) + 1}.mp4'
+        if self.render_visualization(manim_code, output_filename) == False:
+            # if an error occurs, return None
+            return None
 
-        return os.path.join(self.output_dir, output_filename)
+        return 'videos/' + output_filename
