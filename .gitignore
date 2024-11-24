@@ -5,5 +5,8 @@ infographic_outputs/
 
 .venv/
 .env
+static/videos/
+media/
+temp_manim_scene.py
 test*
 __pycache__
