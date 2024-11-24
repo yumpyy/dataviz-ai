@@ -1,5 +1,4 @@
-langchain
-langchain-community
 langchain_google_genai
 django
 manim
+python-dotenv
