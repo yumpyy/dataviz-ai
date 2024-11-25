@@ -2,8 +2,8 @@
 
 The AI-Powered Infographic Video Generator is a user-friendly tool that uses GenAI to turn text or structured files (eg. CSV, JSON) into ready to use infographic videos, automatically choosing the most effective visualization methods for the data.
 
-![](./screenshots/combined.png)
 ![](./screenshots/1.gif)
+![](./screenshots/2.gif)
 
 ![Demo Video](https://www.youtube.com/watch?v=czEbaWtR0m0)
 
