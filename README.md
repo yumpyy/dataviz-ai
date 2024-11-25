@@ -28,7 +28,7 @@ sudo apt install libcairo2-dev ffmpeg texlive texlive-latex-extra texlive-fonts-
 
 ### Docker Install
 ```bash
-docker build -t dataviz_ai .
+docker build --build-arg GOOGLE_API_KEY=api-key-here -t dataviz_ai .
 docker run -p 8000:8000 dataviz_ai
 ```
 
