@@ -5,6 +5,7 @@ The AI-Powered Infographic Video Generator is a user-friendly tool that uses Gen
 ![](./screenshots/1.gif)
 ![](./screenshots/2.gif)
 
+**More demo at:**
 [Demo Video](https://www.youtube.com/watch?v=czEbaWtR0m0)
 
 ## Dependencies
