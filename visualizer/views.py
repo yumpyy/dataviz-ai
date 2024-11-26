@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib import messages
 
 from visualizer.infographics import InfographicGenerator
+from visualizer.models import Prompts
 
 def index(request):
     """
@@ -13,7 +14,9 @@ def create(request):
     """
     handle create landing page routing
     """
-    return render(request, 'create.html', {})
+    recent_prompts = Prompts.objects.order_by("-timestamp")[:5]
+
+    return render(request, 'create.html', {"recent_prompts": recent_prompts})
 
 def create_prompt(request):
     """
@@ -21,15 +24,16 @@ def create_prompt(request):
     """
     if request.POST:
         prompt = request.POST['prompt']
-        print(prompt)
+
+        # save prompt on submission
+        prompts = Prompts(prompt=prompt)
+        prompts.save()
 
         generator = InfographicGenerator()
         vid_path = generator.generate_infographic(prompt)
         if vid_path is None:
             messages.error(request, 'Something went wrong, Try again Later')
             return render(request, 'create_prompt.html')
-
-        print(vid_path)
 
         return render(request, 'result.html', {'vid_path': vid_path})
 

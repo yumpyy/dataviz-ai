@@ -69,6 +69,15 @@
         <div class="card-body text-center">
           <div class="text-purple-400 font-semibold text-lg">Recent Prompts</div>
           <p class="text-gray-300 text-sm">Browse your recent activity and continue where you left off</p>
+          <ul>
+          {% if recent_prompts %}
+            {% for prompt in recent_prompts %}
+            <li>{{ prompt.prompt }}</li>
+            {% endfor %}
+          {% else %}
+            Feels very empty here..
+          {% endif %}
+          </ul>
       </div>
     </div>
   </div>
