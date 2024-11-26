@@ -32,7 +32,8 @@ def create_prompt(request):
         generator = InfographicGenerator()
         vid_path = generator.generate_infographic(prompt)
         if vid_path is None:
-            messages.error(request, 'Something went wrong, Try again Later')
+            # if some error occurs, notify the user something went wrong
+            messages.error(request, 'Something went wrong, Re-submit the prompt. (You can just refresh to re-submit)')
             return render(request, 'create_prompt.html')
 
         return render(request, 'result.html', {'vid_path': vid_path})
@@ -53,8 +54,8 @@ def create_upload(request):
             vid_path = generator.generate_infographic(file_contents)
 
             if vid_path is None:
-                # if vid_path is None, notfiy is user something went wrong
-                messages.error(request, 'Something went wrong, Try again Later')
+                # if some error occurs, notify the user something went wrong
+                messages.error(request, 'Something went wrong, Re-submit the file. (You can just refresh to re-submit')
                 return render(request, 'create_upload.html')
 
             print(vid_path)
