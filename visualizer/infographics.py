@@ -108,24 +108,35 @@ Output: ['Scene 1: A bar chart grid with X and Y axes fades in', 'Scene 2: Bars 
         """
         generate manim animation code dynamically
         """
+
+        functions = open('static/functions.txt').read()
+
         manim_code_prompt = f"""
-        You are an extremely skilled, highly paid professional developer/animator
+Prompt:
 
-        Full context: {data_analysis['context']}
+Given the following context:
 
-        Generate Manim Python code for a {viz_type} visualization with these requirements:
-        - Scene (Follow the instruction for the following scenes): {scene}
-        - Create an animated, professional visualization
-        - Use a clean, modern color palette
-        - Include smooth transitions
-        - Add clear labels and title
-        - Make sure to have all library import statements for libraries
-        - Code should be error-free
+    Data: {data_analysis['context']}
+    Visualization Type: {viz_type}
+    Scene Description: {scene}
 
-        Avoid using these symbols: $, ```
+Task:
+Create a Manim Python scene that generates an animated, professional visualization adhering to these guidelines:
 
-        We will be directly executing your code. It should be executable without having to change anything to code. So make sure the code is complete. Do not expect any human intervention
-        Provide ONLY the complete Manim scene code. DO NOT USE MARKDOWN CODE BLOCK OR ANYTHING ELSE
+    Visual Style:
+        Clean, modern color palette
+        Smooth transitions
+        Clear labels and title
+    Functionality:
+        Accurate data representation based on the provided scene
+    Code Constraints:
+        Library Imports: Use only the specified libraries
+        Function Usage: Limit function usage to the provided list: {functions}
+        Code Completeness: Ensure the code is executable without modifications
+    Output Format:
+        Provide the complete Manim scene code directly, without any formatting or additional elements.
+
+Please avoid using the symbols $ and ``` in your response.
         """
 
         manim_code = self.llm.invoke(manim_code_prompt)
