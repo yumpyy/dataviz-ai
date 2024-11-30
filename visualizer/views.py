@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib import messages
+from django.db import IntegrityError
 
 from visualizer.infographics import InfographicGenerator
 from visualizer.models import Prompts
@@ -26,8 +27,11 @@ def create_prompt(request):
         prompt = request.POST['prompt']
 
         # save prompt on submission
-        prompts = Prompts(prompt=prompt)
-        prompts.save()
+        try:
+            prompts = Prompts(prompt=prompt)
+            prompts.save()
+        except IntegrityError as e:
+            print(e)
 
         generator = InfographicGenerator()
         vid_path = generator.generate_infographic(prompt)
