@@ -1,0 +1,12 @@
+[project]
+name = "dataviz-ai"
+version = "0.1.0"
+description = "Generate visuals/infographics using AI"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.1.4",
+    "langchain-google-genai>=2.0.7",
+    "manim>=0.18.1",
+    "python-dotenv>=1.0.1",
+]

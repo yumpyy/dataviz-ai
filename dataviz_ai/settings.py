@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ml!of1m%o27$^5#)1=5a@aj@9osug#^$%$x72m^n^#kk0xad4x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["dataviz-ai.onrender.com", "0.0.0.0"]
 
 
 # Application definition

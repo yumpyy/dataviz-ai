@@ -10,7 +10,7 @@ load_dotenv()
 
 class InfographicGenerator:
     def __init__(self,
-                 model='gemini-1.5-flash',):
+                 model='gemini-2.0-flash-exp',):
         """
         initialize the infographic generator with open-source ai models
         """
@@ -28,13 +28,15 @@ class InfographicGenerator:
         preprocess and analyze input data
         """
 
+        input_data = input_data.strip()
+
         # use llm to understand data context
         context_analysis = self.llm.invoke(f"""
         Analyze the following data and provide:
         1. Data type (percentages, comparisons, time series, etc.)
         2. Key statistical insights
         3. And other additional information which may come handy while animating.
-        4. Suggested visualization type
+        4. Suggest ONLY a single visualization type
 
         Data: {input_data}
         """)
@@ -46,16 +48,14 @@ class InfographicGenerator:
         }
 
     def generate_infographic_scenes(self, data_analysis):
-        # Define the prompt for generating infographic animation scenes
+        # define the prompt for generating infographic animation scenes
         prompt = f"""
             Generate scenes for infographic animations. Keep the visuals really basic, so that manim code can be easily generated for it.
             Summary: {data_analysis['context']}
 
-            KEEP IT SHORT AND SIMPLE.
-            
             Here is an example:
-                Input: Tech company revenue growth: 2020: $100M, 2021: $150M, 2022: $220M
-                Output: ['Scene 1: X and Y axis for graph are emerging', 'Scene 2: Labels appear on the axis', 'Scene 3: bars rising up from x axis', 'Scene 4: Labels appear on top of each']
+            Input: Tech company revenue growth: 2020: $100M, 2021: $150M, 2022: $220M
+            Output: ['Scene 1: X and Y axis for graph are emerging', 'Scene 2: Labels appear on the axis', 'Scene 3: bars rising up from x axis', 'Scene 4: Labels appear on top of each']
 
             Input: Sales percentages of a store's top three product categories: Electronics: 40%, Clothing: 30%, Groceries: 30%
             Output: ['Scene 1: A pie chart circle emerges', 'Scene 2: Segments appear with colors for each category', 'Scene 3: Labels with percentages fade in near each segment']
@@ -104,34 +104,35 @@ Output: ['Scene 1: A bar chart grid with X and Y axes fades in', 'Scene 2: Bars 
     def generate_manim_code(self,
                             data_analysis: Dict[str, Any],
                             scene: str,
-                            viz_type) -> str:
+                            ) -> str:
         """
         generate manim animation code dynamically
         """
 
-        functions = open('static/functions.txt').read()
-
         manim_code_prompt = f"""
+You are a great animator who uses manim to create very beautiful and perfect visuals with differnet fonts and colors
+
 Prompt:
 
 Given the following context:
 
     Data: {data_analysis['context']}
-    Visualization Type: {viz_type}
     Scene Description: {scene}
 
 Task:
-Create a Manim Python scene that generates an animated, professional visualization adhering to these guidelines:
+Create a Manim Python scene that generates an animated, creative visualization adhering to these guidelines:
 
     Visual Style:
-        Clean, modern color palette
+        Clean, Pastel color palette
+        Background and foreground colors shall not overlap
+        Use color=ManimColor('#hexcodehere')
         Smooth transitions
         Clear labels and title
     Functionality:
         Accurate data representation based on the provided scene
     Code Constraints:
+        No external files to be used. Including images, videos, gifs or anything else.
         Library Imports: Use only the specified libraries
-        Function Usage: Limit function usage to the provided list: {functions}
         Code Completeness: Ensure the code is executable without modifications
     Output Format:
         Provide the complete Manim scene code directly, without any formatting or additional elements.
@@ -145,6 +146,11 @@ Please avoid using the symbols $ and ``` in your response.
         clean_code = re.sub(r'```python|```', '', manim_code.content)
 
         return clean_code
+
+    def create_svg(self, manim_code: str):
+        """
+        create assets for the code, if any.
+        """
 
     def render_visualization(self, manim_code: str, output_filename: str):
         """
@@ -186,15 +192,12 @@ Please avoid using the symbols $ and ``` in your response.
         # preprocess and analyze data
         data_analysis = self.preprocess_data(prompt)
 
-        # recommend visualization type
-        viz_type = self.recommend_visualization(data_analysis)
-
         # generate scenes
         scenes = self.generate_infographic_scenes(data_analysis)
         print(scenes)
 
         # for scene in scenes:
-        manim_code = self.generate_manim_code(data_analysis, scenes, viz_type)
+        manim_code = self.generate_manim_code(data_analysis, scenes,)
 
         # render visualization
         output_filename = f'{len(os.listdir(self.output_dir)) + 1}.mp4'

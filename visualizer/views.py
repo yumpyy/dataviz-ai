@@ -4,6 +4,7 @@ from django.db import IntegrityError
 
 from visualizer.infographics import InfographicGenerator
 from visualizer.models import Prompts
+from visualizer import utils
 
 def index(request):
     """
@@ -35,6 +36,8 @@ def create_prompt(request):
 
         generator = InfographicGenerator()
         vid_path = generator.generate_infographic(prompt)
+        utils.cleanup_dir("media")
+
         if vid_path is None:
             # if some error occurs, notify the user something went wrong
             messages.error(request, 'Something went wrong, Re-submit the prompt. (You can just refresh to re-submit)')
