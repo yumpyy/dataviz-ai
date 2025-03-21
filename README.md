@@ -1,12 +1,8 @@
-# Dataviz AI
+# Dataviz
 
 The AI-Powered Infographic Video Generator is a user-friendly tool that uses GenAI to turn text or structured files (eg. CSV, JSON) into ready to use infographic videos, automatically choosing the most effective visualization methods for the data.
 
-![](./screenshots/1.gif)
-![](./screenshots/2.gif)
-
-**More demo at:**
-[Demo Video](https://youtu.be/GhcHa8kFvXA)
+![Demo](https://youtu.be/g4Pz0wc98vs)
 
 ## Dependencies
 
